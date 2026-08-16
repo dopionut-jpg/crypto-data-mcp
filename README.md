@@ -3,6 +3,7 @@
 **Crypto and macro market intelligence for autonomous agents — the signal set a trading desk watches, delivered as structured JSON.**
 
 [![MCP Registry](https://img.shields.io/badge/MCP_Registry-listed-2ea44f)](https://registry.modelcontextprotocol.io)
+[![TensorBlock MCP Index](https://mcp-index.tensorblock.co/v1/servers/github-dopionut-jpg-crypto-data-mcp-7ab661d9/badge.svg)](https://tensorblock.co/mcp/servers/github-dopionut-jpg-crypto-data-mcp-7ab661d9)
 [![Transport](https://img.shields.io/badge/transport-streamable_http-blue)](https://modelcontextprotocol.io)
 [![Tools](https://img.shields.io/badge/tools-13-orange)]()
 [![Auth](https://img.shields.io/badge/API_key-not_required-brightgreen)]()
