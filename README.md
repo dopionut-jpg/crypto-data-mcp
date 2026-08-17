@@ -79,8 +79,8 @@ Then ask your agent something real:
 
 | Tool | Returns |
 |---|---|
-| `get_derivatives` | Funding rate and open interest for one coin across Binance, Bybit, OKX — per-venue values, average funding, total OI in USD, funding spread |
-| `get_derivatives_aggregate` | The same signal with liquidity filtering applied — largest-OI perpetual per venue, thin venues excluded |
+| `get_derivatives` | **One coin, venue by venue.** Funding and open interest for each of Binance, Bybit and OKX separately, plus average funding, total OI in USD and the funding spread. Reach for this when venue divergence matters — one venue far more positive than the rest is localised positioning, not market consensus |
+| `get_derivatives_aggregate` | **A whole watchlist at once.** Headline funding and OI for up to 10 coins in a single call, no venue breakdown. Costs one upstream request regardless of how many coins you ask for, so it beats looping the single-coin tool |
 
 ### On-chain
 
