@@ -20,11 +20,9 @@ No API key. No signup. 13 read-only tools, live at call time.
 
 A price tells you where the market is. Positioning tells you what happens next — and it is much harder to get right.
 
-Here is a real example from building this server. Aggregating perpetual funding for BTC naively — averaging across every venue that publishes a rate — produced **9.2%**. That number implied an extremely overheated market on the verge of a long squeeze.
+Here is a real example from building this server. The derivatives feed carries roughly 190 venues. Averaging BTC perpetual funding across every one of them that publishes a rate gives **0.075% per 8h**. Filtering to venues that actually have depth gives **0.0023%** — the naive number is **32× too high**.
 
-The real number was **0.43%**.
-
-The gap came from thin venues with almost no open interest publishing wild outlier rates, each weighted exactly the same as a deep, liquid book. The average was arithmetically correct and completely useless.
+The gap comes from thin venues with almost no open interest printing wild outlier rates, each weighted exactly the same as a deep, liquid book. In that same snapshot one venue was printing **9.5% per 8h** — about 28% per day — on a book nobody trades. The average was arithmetically correct and completely useless.
 
 This server takes the **largest-open-interest perpetual per venue** across Binance, Bybit and OKX, and excludes the thin venues entirely. That single decision is the difference between a signal and noise — and it is the kind of decision an agent cannot make for itself from a raw endpoint.
 
