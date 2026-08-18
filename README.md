@@ -5,14 +5,14 @@
 [![MCP Registry](https://img.shields.io/badge/MCP_Registry-listed-2ea44f)](https://registry.modelcontextprotocol.io)
 [![TensorBlock MCP Index](https://mcp-index.tensorblock.co/v1/servers/github-dopionut-jpg-crypto-data-mcp-7ab661d9/badge.svg)](https://tensorblock.co/mcp/servers/github-dopionut-jpg-crypto-data-mcp-7ab661d9)
 [![Transport](https://img.shields.io/badge/transport-streamable_http-blue)](https://modelcontextprotocol.io)
-[![Tools](https://img.shields.io/badge/tools-14-orange)]()
+[![Tools](https://img.shields.io/badge/tools-15-orange)]()
 [![Auth](https://img.shields.io/badge/API_key-not_required-brightgreen)]()
 
 ```
 https://asistent-crypto.vercel.app/mcp
 ```
 
-No API key. No signup. 14 read-only tools, live at call time.
+No API key. No signup. 15 read-only tools, live at call time.
 
 ---
 
@@ -71,7 +71,7 @@ Then ask your agent something real:
 
 ---
 
-## The 14 tools
+## The 15 tools
 
 ### Positioning & derivatives
 
@@ -79,6 +79,7 @@ Then ask your agent something real:
 |---|---|
 | `get_derivatives` | **One coin, venue by venue.** Funding and open interest for each of Binance, Bybit, OKX and Hyperliquid separately. Hyperliquid is the only DEX in the set; its native hourly funding is converted to the same percent-per-8h unit as the rest, so the venues are directly comparable, plus average funding, total OI in USD and the funding spread. Reach for this when venue divergence matters — one venue far more positive than the rest is localised positioning, not market consensus |
 | `get_derivatives_aggregate` | **A whole watchlist at once.** Headline funding and OI for up to 10 coins in a single call, no venue breakdown. Costs one upstream request regardless of how many coins you ask for, so it beats looping the single-coin tool. Funding comes both per 8h and annualized, so 0.0067% per 8h also reads as 7.3% a year |
+| `get_implied_volatility` | **How far is price expected to move?** The 30-day options-implied volatility index (DVOL) for BTC and ETH, annualized in percent, with its percentile over the last month and the derived expected move over 1, 7 and 30 days. Every other derivatives tool here says how the market is *positioned*; this one prices how expensive protection is. A 35% reading says nothing alone — at the 5th percentile of the month it says optionality is cheap and the market is complacent. Distinct from the VIX in `get_macro_rates`, which is US equity volatility |
 | `get_market_history` | **Is this reading actually extreme?** Funding, open interest, Fear & Greed and BTC dominance from a series captured every ~10 minutes, each as current, median, min, max and percentile over a window of up to 7 days. A funding number means little until you know where it sits in its own distribution |
 
 ### On-chain

@@ -2,8 +2,8 @@
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-10-17/server.schema.json",
   "name": "io.github.dopionut-jpg/crypto-data-market-analysis",
   "title": "Crypto Data & Market Analysis Agent",
-  "description": "Liquidity-filtered funding & OI across 3 CEXs + Hyperliquid, annualized, + macro regime signals",
-  "version": "1.2.0",
+  "description": "Funding & OI across 3 CEXs + Hyperliquid, options implied volatility, macro regime",
+  "version": "1.3.0",
   "remotes": [
     {
       "type": "streamable-http",
