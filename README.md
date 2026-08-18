@@ -24,7 +24,7 @@ Here is a real example from building this server. The derivatives feed carries r
 
 The gap comes from thin venues with almost no open interest printing wild outlier rates, each weighted exactly the same as a deep, liquid book. In that same snapshot one venue was printing **9.5% per 8h** — about 28% per day — on a book nobody trades. The average was arithmetically correct and completely useless.
 
-This server takes the **largest-open-interest perpetual per venue** across Binance, Bybit and OKX, and excludes the thin venues entirely. That single decision is the difference between a signal and noise — and it is the kind of decision an agent cannot make for itself from a raw endpoint.
+This server takes the **largest-open-interest perpetual per venue** across Binance, Bybit, OKX and Hyperliquid — the three deepest centralised books plus the largest perpetual DEX — and excludes the thin venues entirely. That single decision is the difference between a signal and noise — and it is the kind of decision an agent cannot make for itself from a raw endpoint.
 
 The same discipline applies across every tool here.
 
@@ -77,7 +77,7 @@ Then ask your agent something real:
 
 | Tool | Returns |
 |---|---|
-| `get_derivatives` | **One coin, venue by venue.** Funding and open interest for each of Binance, Bybit and OKX separately, plus average funding, total OI in USD and the funding spread. Reach for this when venue divergence matters — one venue far more positive than the rest is localised positioning, not market consensus |
+| `get_derivatives` | **One coin, venue by venue.** Funding and open interest for each of Binance, Bybit, OKX and Hyperliquid separately. Hyperliquid is the only DEX in the set; its native hourly funding is converted to the same percent-per-8h unit as the rest, so the venues are directly comparable, plus average funding, total OI in USD and the funding spread. Reach for this when venue divergence matters — one venue far more positive than the rest is localised positioning, not market consensus |
 | `get_derivatives_aggregate` | **A whole watchlist at once.** Headline funding and OI for up to 10 coins in a single call, no venue breakdown. Costs one upstream request regardless of how many coins you ask for, so it beats looping the single-coin tool. Funding comes both per 8h and annualized, so 0.0067% per 8h also reads as 7.3% a year |
 | `get_market_history` | **Is this reading actually extreme?** Funding, open interest, Fear & Greed and BTC dominance from a series captured every ~10 minutes, each as current, median, min, max and percentile over a window of up to 7 days. A funding number means little until you know where it sits in its own distribution |
 
