@@ -2,8 +2,8 @@
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-10-17/server.schema.json",
   "name": "io.github.dopionut-jpg/crypto-data-market-analysis",
   "title": "Crypto Data & Market Analysis Agent",
-  "description": "Desk-grade crypto & macro intelligence for agents: multi-venue funding, OI, on-chain, macro",
-  "version": "1.0.1",
+  "description": "Liquidity-filtered funding & OI across Binance/Bybit/OKX, annualized, + macro regime signals",
+  "version": "1.1.0",
   "remotes": [
     {
       "type": "streamable-http",
