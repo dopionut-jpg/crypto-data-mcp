@@ -5,14 +5,14 @@
 [![MCP Registry](https://img.shields.io/badge/MCP_Registry-listed-2ea44f)](https://registry.modelcontextprotocol.io)
 [![TensorBlock MCP Index](https://mcp-index.tensorblock.co/v1/servers/github-dopionut-jpg-crypto-data-mcp-7ab661d9/badge.svg)](https://tensorblock.co/mcp/servers/github-dopionut-jpg-crypto-data-mcp-7ab661d9)
 [![Transport](https://img.shields.io/badge/transport-streamable_http-blue)](https://modelcontextprotocol.io)
-[![Tools](https://img.shields.io/badge/tools-15-orange)]()
+[![Tools](https://img.shields.io/badge/tools-17-orange)]()
 [![Auth](https://img.shields.io/badge/API_key-not_required-brightgreen)]()
 
 ```
 https://asistent-crypto.vercel.app/mcp
 ```
 
-No API key. No signup. 15 read-only tools, live at call time.
+No API key. No signup. 17 read-only tools, live at call time.
 
 ---
 
@@ -20,9 +20,9 @@ No API key. No signup. 15 read-only tools, live at call time.
 
 A price tells you where the market is. Positioning tells you what happens next — and it is much harder to get right.
 
-Here is a real example from building this server. The derivatives feed carries roughly 190 venues. Averaging BTC perpetual funding across every one of them that publishes a rate gives **0.075% per 8h**. Filtering to venues that actually have depth gives **0.0023%** — the naive number is **32× too high**.
+Here is the example that shaped this server. Roughly 190 venues publish a perpetual funding rate per major coin. Average them the obvious way — one venue, one vote — and the result is wrong by an order of magnitude, because a book with a few hundred thousand dollars in it counts exactly as much as one with ten billion. Venues printing **9-10% per 8h**, around 30% *per day*, on books nobody trades are what drag the number.
 
-The gap comes from thin venues with almost no open interest printing wild outlier rates, each weighted exactly the same as a deep, liquid book. In that same snapshot one venue was printing **9.5% per 8h** — about 28% per day — on a book nobody trades. The average was arithmetically correct and completely useless.
+**[See it computed live →](https://asistent-crypto.vercel.app/proof)** — the same market measured three ways (simple average, open-interest-weighted, and what this server returns), recomputed on every page load, with the distorting venues and their open interest shown. No number on that page is written by hand, because the multiple moves every day and a stale proof is worse than none.
 
 This server takes the **largest-open-interest perpetual per venue** across Binance, Bybit, OKX and Hyperliquid — the three deepest centralised books plus the largest perpetual DEX — and excludes the thin venues entirely. That single decision is the difference between a signal and noise — and it is the kind of decision an agent cannot make for itself from a raw endpoint.
 
@@ -71,12 +71,14 @@ Then ask your agent something real:
 
 ---
 
-## The 15 tools
+## The 17 tools
 
 ### Positioning & derivatives
 
 | Tool | Returns |
 |---|---|
+| `get_market_brief` | **The verdict, in one call.** Composes positioning, sentiment, implied volatility, the macro regime and execution cost into a single stance — risk-on, risk-off, fragile or neutral — with a confidence level, every driver that produced it, and the concrete numeric conditions that would invalidate it. Deterministic, not a model opinion: the same numbers always give the same verdict, and any single driver can be argued with. *Fragile* is a state rather than a direction — crowded positioning together with cheap implied volatility, meaning the market leans one way and pays almost nothing for protection |
+| `get_execution_cost` | **What does an entry actually cost?** Live order book depth on Bybit and OKX, walked at your size: average fill price, slippage against mid in basis points *and* in dollars, the spread, depth within 1% of mid, and which venue is cheaper for that exact size — separately for buying and selling. A size the book cannot absorb comes back as unfilled rather than priced by extrapolation. The floor is half the spread; anything above it is your size eating through levels |
 | `get_derivatives` | **One coin, venue by venue.** Funding and open interest for each of Binance, Bybit, OKX and Hyperliquid separately. Hyperliquid is the only DEX in the set; its native hourly funding is converted to the same percent-per-8h unit as the rest, so the venues are directly comparable, plus average funding, total OI in USD and the funding spread. Reach for this when venue divergence matters — one venue far more positive than the rest is localised positioning, not market consensus |
 | `get_derivatives_aggregate` | **A whole watchlist at once.** Headline funding and OI for up to 10 coins in a single call, no venue breakdown. Costs one upstream request regardless of how many coins you ask for, so it beats looping the single-coin tool. Funding comes both per 8h and annualized, so 0.0067% per 8h also reads as 7.3% a year |
 | `get_implied_volatility` | **How far is price expected to move?** The 30-day options-implied volatility index (DVOL) for BTC and ETH, annualized in percent, with its percentile over the last month and the derived expected move over 1, 7 and 30 days. Every other derivatives tool here says how the market is *positioned*; this one prices how expensive protection is. A 35% reading says nothing alone — at the 5th percentile of the month it says optionality is cheap and the market is complacent. Distinct from the VIX in `get_macro_rates`, which is US equity volatility |
