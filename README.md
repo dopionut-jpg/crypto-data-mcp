@@ -5,14 +5,14 @@
 [![MCP Registry](https://img.shields.io/badge/MCP_Registry-listed-2ea44f)](https://registry.modelcontextprotocol.io)
 [![TensorBlock MCP Index](https://mcp-index.tensorblock.co/v1/servers/github-dopionut-jpg-crypto-data-mcp-7ab661d9/badge.svg)](https://tensorblock.co/mcp/servers/github-dopionut-jpg-crypto-data-mcp-7ab661d9)
 [![Transport](https://img.shields.io/badge/transport-streamable_http-blue)](https://modelcontextprotocol.io)
-[![Tools](https://img.shields.io/badge/tools-17-orange)]()
+[![Tools](https://img.shields.io/badge/tools-18-orange)]()
 [![Auth](https://img.shields.io/badge/API_key-not_required-brightgreen)]()
 
 ```
-https://asistent-crypto.vercel.app/mcp
+https://crypto-asistent.com/mcp
 ```
 
-No API key. No signup. 17 read-only tools, live at call time.
+No API key. No signup. 17 read-only tools, live at call time — plus one paid tool in the same channel, priced per call.
 
 ---
 
@@ -22,7 +22,7 @@ A price tells you where the market is. Positioning tells you what happens next �
 
 Here is the example that shaped this server. Roughly 190 venues publish a perpetual funding rate per major coin. Average them the obvious way — one venue, one vote — and the result is wrong by an order of magnitude, because a book with a few hundred thousand dollars in it counts exactly as much as one with ten billion. Venues printing **9-10% per 8h**, around 30% *per day*, on books nobody trades are what drag the number.
 
-**[See it computed live →](https://asistent-crypto.vercel.app/proof)** — the same market measured three ways (simple average, open-interest-weighted, and what this server returns), recomputed on every page load, with the distorting venues and their open interest shown. No number on that page is written by hand, because the multiple moves every day and a stale proof is worse than none.
+**[See it computed live →](https://crypto-asistent.com/proof)** — the same market measured three ways (simple average, open-interest-weighted, and what this server returns), recomputed on every page load, with the distorting venues and their open interest shown. No number on that page is written by hand, because the multiple moves every day and a stale proof is worse than none.
 
 This server takes the **largest-open-interest perpetual per venue** across Binance, Bybit, OKX and Hyperliquid — the three deepest centralised books plus the largest perpetual DEX — and excludes the thin venues entirely. That single decision is the difference between a signal and noise — and it is the kind of decision an agent cannot make for itself from a raw endpoint.
 
@@ -35,7 +35,7 @@ The same discipline applies across every tool here.
 **Claude Code**
 
 ```bash
-claude mcp add --transport http crypto-data https://asistent-crypto.vercel.app/mcp
+claude mcp add --transport http crypto-data https://crypto-asistent.com/mcp
 ```
 
 **Cursor, Windsurf, VS Code** — add to your MCP config:
@@ -44,7 +44,7 @@ claude mcp add --transport http crypto-data https://asistent-crypto.vercel.app/m
 {
   "mcpServers": {
     "crypto-data": {
-      "url": "https://asistent-crypto.vercel.app/mcp"
+      "url": "https://crypto-asistent.com/mcp"
     }
   }
 }
@@ -59,7 +59,7 @@ claude mcp add --transport http crypto-data https://asistent-crypto.vercel.app/m
   "mcpServers": {
     "crypto-data": {
       "command": "npx",
-      "args": ["-y", "mcp-remote", "https://asistent-crypto.vercel.app/mcp"]
+      "args": ["-y", "mcp-remote", "https://crypto-asistent.com/mcp"]
     }
   }
 }
@@ -71,7 +71,7 @@ Then ask your agent something real:
 
 ---
 
-## The 17 tools
+## The 17 free tools
 
 ### Positioning & derivatives
 
@@ -112,6 +112,18 @@ Then ask your agent something real:
 
 ---
 
+## The paid tool: `analyze_market`
+
+The seventeen tools above return data. `analyze_market` returns a **verdict** — the same tools composed, read by a model, and rendered as a structured answer: regime, directional stance, confidence, the key price levels, and the concrete conditions that would invalidate the thesis.
+
+It lives in the same MCP server, under the same URL, and your client lists it alongside the free ones. It just costs money.
+
+**$0.25 per call, in USDC on Base, settled with [x402](https://x402.org).** No account, no key, no prepayment — your agent signs a gasless USDC authorization when it calls the tool, and the analysis comes back in the same response. A client without x402 support sees the tool, calls it, and gets a payment challenge back instead of an answer; nothing breaks and nothing is charged.
+
+Everything else in this server stays free. This is the only tool that is not.
+
+---
+
 ## What makes this different
 
 **Cross-domain by design.** Exchange data alone cannot tell you whether a funding spike is a local squeeze or a macro repricing. Funding, on-chain flows, dominance and the rate environment live behind one endpoint here precisely so an agent can compose them in a single reasoning pass.
@@ -128,22 +140,32 @@ Then ask your agent something real:
 
 ## Rate limits
 
-120 requests per hour per IP on the free tier — comfortably above normal interactive agent use.
+120 requests per hour per IP on the free tools — comfortably above normal interactive agent use.
 
-Need more, or want an LLM-synthesized market verdict rather than raw JSON? The same intelligence is available as a paid HTTP API with per-call settlement in USDC on Base (x402), or with prepaid credits:
+---
 
-- `POST /api/x402/query` — $0.05 per call, any single tool
-- `POST /api/x402/analyze` — $0.25 per call, multi-tool synthesis into a structured verdict with regime, confidence, key levels and invalidation
+## Also available over plain HTTP
 
-Discovery: [`/.well-known/agent-card.json`](https://asistent-crypto.vercel.app/.well-known/agent-card.json) · [OpenAPI](https://asistent-crypto.vercel.app/openapi.json)
+If you are not speaking MCP, the same data is sold as 19 individual HTTP endpoints, each settled per call in USDC on Base via x402 — no account, no key, no prepayment:
+
+| Endpoint | Price | Returns |
+|---|---|---|
+| `POST /api/x402/data/{tool}` | **$0.04** | One tool's raw JSON, 16 of them: `funding-oi`, `funding-by-venue`, `orderbook-depth`, `implied-volatility`, `market-history`, `fear-greed`, `dominance`, `whale-flows`, `macro-rates`, `economic-calendar`, `prices`, `defi-tvl`, `btc-network`, `tradfi-quotes`, `address`, `news` |
+| `POST /api/x402/data/brief` | **$0.05** | The composed verdict, deterministic — same as `get_market_brief` |
+| `POST /api/x402/query` | **$0.05** | Any single tool, by name, through one endpoint |
+| `POST /api/x402/analyze` | **$0.25** | Multi-tool synthesis into a structured verdict — same product as `analyze_market` |
+
+Prepaid credits with a Bearer key are available as an alternative to per-call settlement.
+
+Discovery: [`/.well-known/x402`](https://crypto-asistent.com/.well-known/x402) · [`/.well-known/agent-card.json`](https://crypto-asistent.com/.well-known/agent-card.json) · [OpenAPI](https://crypto-asistent.com/openapi.json)
 
 ---
 
 ## Links
 
-- **MCP endpoint:** `https://asistent-crypto.vercel.app/mcp`
+- **MCP endpoint:** `https://crypto-asistent.com/mcp`
 - **Official MCP Registry:** `io.github.dopionut-jpg/crypto-data-market-analysis`
-- **Agent Card:** https://asistent-crypto.vercel.app/.well-known/agent-card.json
+- **Agent Card:** https://crypto-asistent.com/.well-known/agent-card.json
 
 ---
 

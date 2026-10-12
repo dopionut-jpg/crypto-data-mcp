@@ -7,7 +7,7 @@
   "remotes": [
     {
       "type": "streamable-http",
-      "url": "https://asistent-crypto.vercel.app/mcp"
+      "url": "https://crypto-asistent.com/mcp"
     }
   ]
 }
